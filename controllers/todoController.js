@@ -17,6 +17,8 @@ export const getTodos = async (req, res) => {
   res.json({ todos, error });
 };
 
-export const updateTodo = async (req, res) => {};
+export const updateTodo = async (req, res) => {
+  console.log("abc");
+};
 
 export const deleteTodo = async (req, res) => {};
