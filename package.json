@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon  --inspect app.js"
+    "dev": "nodemon  --inspect app.js",
+    "db-gen-types": "supabase gen types typescript --project-id jdcwtlsthduxdrgryucg > lib/database.types.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.5",
