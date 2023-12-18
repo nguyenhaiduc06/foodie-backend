@@ -11,7 +11,7 @@ export const auth = function  authenticateToken(req, res, next) {
       if (error) {
         return res.status(401).json({ message: 'JWT không hợp lệ' });
       } else {
-        req.user = decoded; // Lưu thông tin người dùng từ JWT vào thuộc tính req.user
+        req.principle = decoded; // Lưu thông tin người dùng từ JWT vào thuộc tính req.user
         next(); // Cho phép tiếp tục vào hàm xử lý chính
       }
     });
