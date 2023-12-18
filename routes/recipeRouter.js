@@ -6,13 +6,14 @@ import {
   getRecipes,
   updateRecipe,
 } from "../controllers/recipeController.js";
+import {auth} from "../middleware/auth.js"
 
 const recipeRouter = express.Router();
 
-recipeRouter.post("/", createRecipe);
-recipeRouter.get("/", getRecipes);
-recipeRouter.get("/:id", getRecipeDetails);
-recipeRouter.put("/:id", updateRecipe);
-recipeRouter.delete("/:id", deleteRecipe);
+recipeRouter.post("/", auth, createRecipe);
+recipeRouter.get("/", auth, getRecipes);
+recipeRouter.get("/:id", auth, getRecipeDetails);
+recipeRouter.put("/:id", auth, updateRecipe);
+recipeRouter.delete("/:id", auth, deleteRecipe);
 
 export default recipeRouter;

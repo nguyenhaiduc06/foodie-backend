@@ -1,6 +1,6 @@
 import supabase from "../lib/supabase.js";
 import {isUserOfGroup} from "../util/util.js"
-
+export const table = "dishes";
 export const createDish = async (req, res) => {
     const {group_id, name, image_url, date, meal} = req.body;
     let newDish = {
@@ -19,7 +19,7 @@ export const createDish = async (req, res) => {
     if (!validate) {
         return res.status(500).json({error: 'User không thuộc group'});
     }
-    const {data, error} = await supabase.from("dishes").insert(newDish).select().single();
+    const {data, error} = await supabase.from(table).insert(newDish).select().single();
     return res.json({data, error});
 };
 
@@ -36,14 +36,14 @@ export const getDishes = async (req, res) => {
   }
 
   // Get dishes by group_id
-  const {data, error} = await supabase.from("dishes").select().eq('group_id', group_id);
+  const {data, error} = await supabase.from(table).select().eq('group_id', group_id);
   return res.json({data, error});
 };
 
 export const getDishDetails = async (req, res) => {
     const {id} = req.params;
     if (!id) return res.status(500).json({error: 'id must be provided'});
-    const {data, error} = await supabase.from("dishes").select().eq('id', id).select();
+    const {data, error} = await supabase.from(table).select().eq('id', id).select();
     if (data && data.length > 0) {
         const validate = await isUserOfGroup(req.principle.user.id, data[0].group_id);
         if (!validate) {
@@ -68,7 +68,7 @@ export const updateDish = async (req, res) => {
         return res.status(500).json({error: `User không thuộc group ${group_id}`});
     }
     // kiểm tra sản phảm có thuộc group của user hiện tại không
-    const {data : oldDish, error : errorOldDish} = await supabase.from("dishes").select().eq('id', id);
+    const {data : oldDish, error : errorOldDish} = await supabase.from(table).select().eq('id', id);
     if (error || !oldDish || !oldDish.length) return res.json({data : oldDish, error : errorOldDish});
     const validate2 =  await isUserOfGroup(req.principle.user.id, oldDish[0].group_id);
     if (!validate2) {
@@ -93,7 +93,7 @@ export const updateDish = async (req, res) => {
 export const deleteDish = async (req, res) => {
     const {id} = req.params;
     if (!id) return res.status(400).json({error: "id là bắt buộc"});
-    const {data : oldDish, error : errorOldDish} = await supabase.from("dishes").select().eq('id', id);
+    const {data : oldDish, error : errorOldDish} = await supabase.from(table).select().eq('id', id);
     if (errorOldDish ) return res.json({data : null, error : errorOldDish});
     if (!oldDish || !oldDish.length) return res.json({data : null, error : "Dish không tồn tại"});
     
@@ -102,7 +102,7 @@ export const deleteDish = async (req, res) => {
         return res.status(500).json({error: 'Bạn không có quyền với dish này'});
     }
     const { error } = await supabase
-        .from('dishes')
+        .from(table)
         .delete()
         .eq('id', id);
     if (error) return res.json({error});
