@@ -17,7 +17,7 @@ export const createDish = async (req, res) => {
     if (!date) return res.status(400).json({error: "date là bắt buộc"});
     const validate = await isUserOfGroup(req.principle.user.id, group_id);
     if (!validate) {
-        return res.status(500).json({error: 'User không thuộc group'});
+        return res.status(500).json({error: `User không thuộc group ${group_id}`});
     }
     const {data, error} = await supabase.from(table).insert(newDish).select().single();
     return res.json({data, error});
@@ -32,7 +32,7 @@ export const getDishes = async (req, res) => {
   // kiểm tra user thuộc group
   const validate = await isUserOfGroup(req.principle.user.id, group_id);
   if (!validate) {
-    return res.status(500).json({error: 'User không thuộc group'});
+    return res.status(500).json({error: `User không thuộc group ${group_id}`});
   }
 
   // Get dishes by group_id
@@ -47,7 +47,7 @@ export const getDishDetails = async (req, res) => {
     if (data && data.length > 0) {
         const validate = await isUserOfGroup(req.principle.user.id, data[0].group_id);
         if (!validate) {
-            return res.status(500).json({error: 'User không thuộc group'});
+            return res.status(500).json({error: `User không thuộc group ${data[0].group_id}`});
         }
     }
     return res.json({data, error});

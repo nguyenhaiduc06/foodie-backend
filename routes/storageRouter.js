@@ -6,7 +6,7 @@ import {
   getStorages,
   updateStorage,
 } from "../controllers/storageController.js";
-import {auth} from "../middleware/auth.js"
+import {auth} from "../middleware/auth.js";
 
 const storageRouter = express.Router();
 

@@ -17,7 +17,7 @@ export const createRecipe = async (req, res) => {
     
     const validate = await isUserOfGroup(req.principle.user.id, group_id);
     if (!validate) {
-        return res.status(500).json({error: 'User không thuộc group'});
+        return res.status(500).json({error: `User không thuộc group ${group_id}`});
     }
     const {data, error} = await supabase.from(table).insert(newRecipe).select().single();
     return res.json({data, error});
@@ -36,7 +36,7 @@ export const getRecipes = async (req, res) => {
     // kiểm tra user thuộc group
     const validate = await isUserOfGroup(req.principle.user.id, group_id);
     if (!validate) {
-        return res.status(500).json({error: 'User không thuộc group'});
+        return res.status(500).json({error: `User không thuộc group ${group_id}`});
     }
 
     // getRecipes by group_id
@@ -51,7 +51,7 @@ export const getRecipeDetails = async (req, res) => {
     if (data && data.length > 0) {
         const validate = await isUserOfGroup(req.principle.user.id, data[0].group_id);
         if (!validate) {
-            return res.status(500).json({error: 'User không thuộc group'});
+            return res.status(500).json({error: `User không thuộc group ${data[0].group_id}`});
         }
     }
     return res.json({data, error});
@@ -67,7 +67,7 @@ export const updateRecipe = async (req, res) => {
     
     const validate = await isUserOfGroup(req.principle.user.id, group_id);
     if (!validate) {
-        return res.status(500).json({error: 'User không thuộc group'});
+        return res.status(500).json({error: `User không thuộc group ${group_id}`});
     }
 
     // kiểm tra sản phảm có thuộc group của user hiện tại không
