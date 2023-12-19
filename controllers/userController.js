@@ -11,7 +11,7 @@ export const signUp = async (req, res) => {
     if (password == null || password == "") return res.status(400).json({error: "password là bắt buộc"});
     if (name == null || name == "") return res.status(400).json({error: "name là bắt buộc"});
 
-    const {data, error : error2} = await supabase
+    const {data, error: error2} = await supabase
         .from('users')
         .select()
         .eq('username', username);
@@ -32,20 +32,21 @@ export const signUp = async (req, res) => {
         password: hashedPassword,
         avatar_url: avatarUrl
     }
-    let {data:x, error: y} =  await supabase.from("groups").select().eq('name', "abcd");
-    let {data : user, error} = await supabase.from("users").insert(newUser).select().single();
+    let {data: x, error: y} = await supabase.from("groups").select().eq('name', "abcd");
+    let {data: user, error} = await supabase.from("users").insert(newUser).select().single();
     delete user.password;
     let {data: group, error: errorGroup} = await supabase.from("groups").insert({
             created_at: new Date().toISOString(),
             name: username + "Group",
         }
     ).select().single();
-    let {data : member, error : errorMember} = await supabase.from("members").insert(
-    {
-        created_at : new Date().toISOString(),
-        user_id : user.id,
-        group_id : group.id
-    }).select().single();
+    let {data: member, error: errorMember} = await supabase.from("members").insert(
+        {
+            created_at: new Date().toISOString(),
+            user_id: user.id,
+            group_id: group.id,
+            status: 'active'
+        }).select().single();
 
     const token = createJwt({user});
     res.json({token});

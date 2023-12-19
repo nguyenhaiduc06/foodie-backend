@@ -5,14 +5,15 @@ import {
   getStorageDetails,
   getStorages,
   updateStorage,
-} from "../controllers/storageController";
+} from "../controllers/storageController.js";
+import {auth} from "../middleware/auth.js";
 
 const storageRouter = express.Router();
 
-storageRouter.post("/", createStorage);
-storageRouter.get("/", getStorages);
-storageRouter.get("/:id", getStorageDetails);
-storageRouter.put("/:id", updateStorage);
-storageRouter.delete("/:id", deleteStorage);
+storageRouter.post("/", auth, createStorage);
+storageRouter.get("/", auth, getStorages);
+storageRouter.get("/:id", auth, getStorageDetails);
+storageRouter.put("/:id", auth, updateStorage);
+storageRouter.delete("/:id", auth, deleteStorage);
 
 export default storageRouter;
