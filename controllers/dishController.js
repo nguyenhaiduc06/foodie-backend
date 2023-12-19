@@ -69,7 +69,7 @@ export const updateDish = async (req, res) => {
     }
     // kiểm tra sản phảm có thuộc group của user hiện tại không
     const {data : oldDish, error : errorOldDish} = await supabase.from(table).select().eq('id', id);
-    if (error || !oldDish || !oldDish.length) return res.json({data : oldDish, error : errorOldDish});
+    if (errorOldDish || !oldDish || !oldDish.length) return res.json({data : oldDish, error : errorOldDish});
     const validate2 =  await isUserOfGroup(req.principle.user.id, oldDish[0].group_id);
     if (!validate2) {
         return res.status(500).json({error: 'Bạn không có quyền với dish này'});

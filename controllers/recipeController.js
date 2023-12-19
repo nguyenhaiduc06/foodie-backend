@@ -2,10 +2,6 @@ import {isUserOfGroup} from "../util/util.js";
 import supabase from "../lib/supabase.js";
 export const table = "recipes"; 
 export const createRecipe = async (req, res) => {
-    // const {group_id, name, content, image_url} = req.body;
-    // Example:
-    // const {data, error} = await supabase.from().insert();
-    // res.json({data, error});
 
     const {group_id, name, content, image_url} = req.body;
     if (!group_id) return res.status(400).json({error: "group_id là bắt buộc"});
@@ -76,7 +72,7 @@ export const updateRecipe = async (req, res) => {
 
     // kiểm tra sản phảm có thuộc group của user hiện tại không
     const {data : oldRecipe, error : errorOldRecipe} = await supabase.from(table).select().eq('id', id);
-    if (error || !oldRecipe || !oldRecipe.length) return res.json({data : oldRecipe, error : errorOldRecipe});
+    if (errorOldRecipe || !oldRecipe || !oldRecipe.length) return res.json({data : oldRecipe, error : errorOldRecipe});
     const validate2 =  await isUserOfGroup(req.principle.user.id, oldRecipe[0].group_id);
     if (!validate2) {
         return res.status(500).json({error: 'Bạn không có quyền với Recipe này'});
@@ -110,7 +106,7 @@ export const deleteRecipe = async (req, res) => {
         return res.status(500).json({error: 'Bạn không có quyền với Recipe này'});
     }
     const { error } = await supabase
-        .from('Recipees')
+        .from(table)
         .delete()
         .eq('id', id);
     if (error) return res.json({error});
