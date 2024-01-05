@@ -5,7 +5,7 @@ import {
   getStorageDetails,
   getStorages,
   updateStorage,
-} from "../controllers/storageController";
+} from "../controllers/storageController.js";
 
 const storageRouter = express.Router();
 

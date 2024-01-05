@@ -1,4 +1,4 @@
-import supabase from "../lib/supabase";
+import supabase from "../lib/supabase.js";
 
 export const createDish = async (req, res) => {
   const { group_id, name, image_url, date, meal } = req.body;

@@ -1,4 +1,4 @@
-import supabase from "../lib/supabase";
+import supabase from "../lib/supabase.js";
 
 export const createStorage = async (req, res) => {
   const { group_id, name, amount, image_url, stored_at, expire_date } =

@@ -5,7 +5,7 @@ import {
   getDishDetails,
   getDishes,
   updateDish,
-} from "../controllers/dishController";
+} from "../controllers/dishController.js";
 
 const dishRouter = express.Router();
 
