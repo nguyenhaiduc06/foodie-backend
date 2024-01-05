@@ -3,15 +3,21 @@ import supabase from "../lib/supabase.js";
 export const createStorage = async (req, res) => {
   const { group_id, name, amount, image_url, stored_at, expire_date } =
     req.body;
-  // Example:
-  // const {data, error} = await supabase.from().insert();
-  // res.json({data, error});
+  const { data, error } = await supabase
+    .from("storages")
+    .insert({ group_id, name, amount, stored_at, expire_date, image_url })
+    .select()
+    .single();
+  res.json({ data, error });
 };
 
 export const getStorages = async (req, res) => {
   const { group_id } = req.query;
-  // Get Storages by group_id
-  // If !group_id, return error = Group id must be provided
+  const { data, error } = await supabase
+    .from("storages")
+    .select("*")
+    .eq("group_id", group_id);
+  res.json({ data, error });
 };
 
 export const getStorageDetails = async (req, res) => {
@@ -20,10 +26,18 @@ export const getStorageDetails = async (req, res) => {
 
 export const updateStorage = async (req, res) => {
   const { id } = req.params;
-  const { group_id, name, amount, image_url, stored_at, expire_date } =
-    req.body;
+  const { name, amount, image_url, stored_at, expire_date } = req.body;
+  const { data, error } = await supabase
+    .from("storages")
+    .update({ name, amount, stored_at, expire_date, image_url })
+    .eq("id", id)
+    .select()
+    .single();
+  res.json({ data, error });
 };
 
 export const deleteStorage = async (req, res) => {
   const { id } = req.params;
+  const { error } = await supabase.from("storages").delete().eq("id", id);
+  res.json({ error });
 };
