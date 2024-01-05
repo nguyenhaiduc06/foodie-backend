@@ -47,6 +47,19 @@ export const signIn = async (req, res) => {
   res.json({ account, token });
 };
 
+export const updateAccount = async (req, res) => {
+  const { id } = req.params;
+  const { name, username } = req.body;
+  const { data, error } = await supabase
+    .from("accounts")
+    .update({
+      name,
+      username,
+    })
+    .eq("id", id);
+  res.json({ data, error });
+};
+
 export const getAccount = async (req, res) => {
   const { token } = req.body;
   jwt.verify(token, JWT_SECRET, (error, data) => {
