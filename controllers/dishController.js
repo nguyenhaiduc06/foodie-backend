@@ -8,7 +8,7 @@ export const createDish = async (req, res) => {
     .insert({ group_id, date, name, meal, image_url })
     .select()
     .single();
-  return { data, error };
+  res.json({ data, error });
 };
 
 export const getDishes = async (req, res) => {
@@ -37,11 +37,11 @@ export const updateDish = async (req, res) => {
     .eq("id", id)
     .select()
     .single();
-  return { data, error };
+  res.json({ data, error });
 };
 
 export const deleteDish = async (req, res) => {
   const { id } = req.params;
   const { error } = await supabase.from("dishes").delete().eq("id", id);
-  return { error };
+  res.json({ error });
 };

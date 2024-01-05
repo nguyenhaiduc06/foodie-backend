@@ -18,8 +18,8 @@ export const createTodo = async (req, res) => {
 
 export const getTodos = async (req, res) => {
   const { group_id, date } = req.query;
-  const startOfDate = dayjs(date).startOf("date").toISOString();
-  const endOfDate = dayjs(date).endOf("date").toISOString();
+  const startOfDate = dayjs(date).startOf("day").toISOString();
+  const endOfDate = dayjs(date).endOf("day").toISOString();
   const { data, error } = await supabase
     .from("todos")
     .select("*")

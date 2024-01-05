@@ -48,10 +48,10 @@ export const updateStorage = async (req, res) => {
     .select()
     .single();
 
-  // Reschedule send notification job
-  const jobId = id.toString();
-  const scheduledDate = dayjs(expire_date).add(5, "seconds");
-  rescheduleJob(jobId, scheduledDate);
+  // // Reschedule send notification job
+  // const jobId = id.toString();
+  // const scheduledDate = dayjs(expire_date).add(5, "seconds");
+  // rescheduleJob(jobId, scheduledDate);
 
   res.json({ data, error });
 };

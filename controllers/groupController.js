@@ -34,7 +34,26 @@ export const getGroups = async (req, res) => {
     .from("members")
     .select("group:groups(*)")
     .eq("account_id", account_id);
-  res.json({ data: data.map((e) => ({ ...e.group })), error });
+  if (data.length > 0) {
+    return res.json({ data: data.map((e) => ({ ...e.group })), error });
+  }
+
+  const { data: group, error: createGroupError } = await supabase
+    .from("groups")
+    .insert({ name: "Personal", image_url: null })
+    .select()
+    .single();
+
+  if (createGroupError) return res.json({ error: createGroupError });
+
+  await supabase.from("members").insert([
+    {
+      account_id,
+      group_id: group.id,
+      is_admin: true,
+    },
+  ]);
+  res.json({ data: [group] });
 };
 
 export const getGroupDetails = async (req, res) => {
