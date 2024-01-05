@@ -6,6 +6,7 @@ import todoRouter from "./routes/todoRouter.js";
 import recipeRouter from "./routes/recipeRouter.js";
 import dishRouter from "./routes/dishRouter.js";
 import storageRouter from "./routes/storageRouter.js";
+import groupRouter from "./routes/groupRouter.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use("/todos", todoRouter);
 app.use("/dishes", dishRouter);
 app.use("/storages", storageRouter);
 app.use("/recipes", recipeRouter);
+app.use("/groups", groupRouter);
 
 app.listen(3000, () => {
   console.log("Server is running");
