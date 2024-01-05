@@ -1,16 +1,27 @@
 import supabase from "../lib/supabase.js";
+import dayjs from "dayjs";
 
 export const createDish = async (req, res) => {
-  const { group_id, name, image_url, date, meal } = req.body;
-  // Example:
-  // const {data, error} = await supabase.from().insert();
-  // res.json({data, error});
+  const { group_id, date, name, meal, image_url } = req.body;
+  const { data, error } = await supabase
+    .from("dishes")
+    .insert({ group_id, date, name, meal, image_url })
+    .select()
+    .single();
+  return { data, error };
 };
 
 export const getDishes = async (req, res) => {
-  const { group_id } = req.query;
-  // Get dishes by group_id
-  // If !group_id, return error = Group id must be provided
+  const { group_id, date } = req.query;
+  const startOfDate = dayjs(date).startOf("date").toISOString();
+  const endOfDate = dayjs(date).endOf("date").toISOString();
+  const { data, error } = await supabase
+    .from("dishes")
+    .select("*")
+    .lte("date", endOfDate)
+    .gte("date", startOfDate)
+    .eq("group_id", group_id);
+  res.json({ data, error });
 };
 
 export const getDishDetails = async (req, res) => {
@@ -19,9 +30,18 @@ export const getDishDetails = async (req, res) => {
 
 export const updateDish = async (req, res) => {
   const { id } = req.params;
-  const { group_id, name, image_url, date, meal } = req.body;
+  const { group_id, date, name, image_url, meal } = req.body;
+  const { data, error } = await supabase
+    .from("dishes")
+    .update({ group_id, date, name, meal, image_url })
+    .eq("id", id)
+    .select()
+    .single();
+  return { data, error };
 };
 
 export const deleteDish = async (req, res) => {
   const { id } = req.params;
+  const { error } = await supabase.from("dishes").delete().eq("id", id);
+  return { error };
 };
