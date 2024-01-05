@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 
 export const createTodo = async (req, res) => {
   const { group_id, date, name, amount } = req.body;
-  if (!group_id || !date || !name || !amount) return;
   const { data, error } = await supabase
     .from("todos")
     .insert({
