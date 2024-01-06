@@ -2,12 +2,13 @@ import { Expo } from "expo-server-sdk";
 
 let expo = new Expo();
 
-export const sendPushNotification = async (push_token, title, body) => {
+export const sendPushNotification = async (push_token, title, body, data) => {
   const messages = [
     {
       to: push_token,
       title,
       body,
+      data,
     },
   ];
   const chunks = expo.chunkPushNotifications(messages);

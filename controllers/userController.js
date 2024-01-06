@@ -70,7 +70,7 @@ export const updateAccount = async (req, res) => {
     .eq("username", username)
     .single();
   if (existedAccount) {
-    res.json({ error: "Username already taken" });
+    return res.json({ error: "Username already taken" });
   }
   const { data: updatedAccount, error } = await supabase
     .from("accounts")

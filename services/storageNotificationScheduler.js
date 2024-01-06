@@ -4,19 +4,31 @@ import "dayjs/locale/vi.js";
 dayjs.locale("vi");
 import { scheduleJob, rescheduleJob, cancelJob } from "node-schedule";
 import { sendPushNotification } from "../services/notification.js";
+import supabase from "../lib/supabase.js";
 
 dayjs.extend(relativeTime);
 
 export const createJob = (storage) => {
   const push_token = "ExponentPushToken[vvSWZjKZRF0j8-KL35kPqP]";
   // Schedule a job to send notification
-  const { id, name, amount, stored_in, expire_date } = storage;
+  const { id, name, amount, stored_in, expire_date, group_id } = storage;
   const jobId = id.toString(); // jobId must be a string
   cancelJob(jobId);
   const { title, body, scheduledDate } = createData(storage);
-  scheduleJob(jobId, scheduledDate, () =>
-    sendPushNotification(push_token, title, body)
-  );
+  scheduleJob(jobId, scheduledDate, () => {
+    supabase
+      .from("notifications")
+      .insert({
+        group_id,
+        storage_id: id,
+        title,
+        body,
+      })
+      .then(({ data, error }) => {
+        console.log({ data, error });
+      });
+    sendPushNotification(push_token, title, body, { storage_id: id });
+  });
 };
 
 const createData = (storage) => {
