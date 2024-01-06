@@ -13,7 +13,7 @@ export const signUp = async (req, res) => {
     .eq("username", username)
     .single();
   if (existedAccount) {
-    return res.json({ error: "Existed" });
+    return res.json({ error: "Username existed" });
   }
 
   const hashedPassword = await bcrypt.hash(password, ROUNDS);
@@ -32,14 +32,14 @@ export const signUp = async (req, res) => {
 
 export const signIn = async (req, res) => {
   const { username, password } = req.body;
-  const { data, error } = await supabase
+  const { data: account, error } = await supabase
     .from("accounts")
     .select("*")
-    .eq("username", username);
-  if (!data || data.length == 0) {
+    .eq("username", username)
+    .single();
+  if (!account) {
     return res.json({ error: "User not existed" });
   }
-  const account = data[0];
   if (!bcrypt.compareSync(password, account.password)) {
     return res.json({ error: "Invalid password" });
   }
@@ -47,24 +47,58 @@ export const signIn = async (req, res) => {
   res.json({ account, token });
 };
 
+export const signInWithToken = async (req, res) => {
+  const { token } = req.body;
+  jwt.verify(token, JWT_SECRET, async (error, data) => {
+    if (error) return res.json({ error });
+    const account_id = data.account.id;
+    const { data: account } = await supabase
+      .from("accounts")
+      .select("*")
+      .eq("id", account_id)
+      .single();
+    res.json({ account: account, token });
+  });
+};
+
 export const updateAccount = async (req, res) => {
   const { id } = req.params;
-  const { name, username } = req.body;
-  const { data, error } = await supabase
+  const { name, username, avatar_url } = req.body;
+  const { data: existedAccount } = await supabase
+    .from("accounts")
+    .select("*")
+    .eq("username", username)
+    .single();
+  if (existedAccount) {
+    res.json({ error: "Username already taken" });
+  }
+  const { data: updatedAccount, error } = await supabase
     .from("accounts")
     .update({
       name,
       username,
+      avatar_url,
     })
-    .eq("id", id);
-  res.json({ data, error });
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) return res.json({ error });
+
+  const token = createToken(updatedAccount);
+  res.json({ account: updatedAccount, token });
 };
 
 export const getAccount = async (req, res) => {
   const { token } = req.body;
-  jwt.verify(token, JWT_SECRET, (error, data) => {
+  jwt.verify(token, JWT_SECRET, async (error, data) => {
     if (error) return res.json({ error });
-    res.json({ account: data.account });
+    const account_id = data.account.id;
+    const { data: account } = await supabase
+      .from("accounts")
+      .select("*")
+      .eq("id", account_id)
+      .single();
+    res.json({ account: account });
   });
 };
 
