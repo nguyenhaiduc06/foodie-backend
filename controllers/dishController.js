@@ -13,13 +13,10 @@ export const createDish = async (req, res) => {
 
 export const getDishes = async (req, res) => {
   const { group_id, date } = req.query;
-  const startOfDate = dayjs(date).startOf("date").toISOString();
-  const endOfDate = dayjs(date).endOf("date").toISOString();
   const { data, error } = await supabase
     .from("dishes")
     .select("*")
-    .lte("date", endOfDate)
-    .gte("date", startOfDate)
+    .eq("date", dayjs(date).toString())
     .eq("group_id", group_id);
   res.json({ data, error });
 };

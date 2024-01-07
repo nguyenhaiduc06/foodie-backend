@@ -18,13 +18,10 @@ export const createTodo = async (req, res) => {
 
 export const getTodos = async (req, res) => {
   const { group_id, date } = req.query;
-  const startOfDate = dayjs(date).startOf("day").toISOString();
-  const endOfDate = dayjs(date).endOf("day").toISOString();
   const { data, error } = await supabase
     .from("todos")
     .select("*")
-    .lte("date", endOfDate)
-    .gte("date", startOfDate)
+    .eq("date", dayjs(date).toString())
     .eq("group_id", group_id)
     .order("created_at", { ascending: false });
   res.json({ data, error });
