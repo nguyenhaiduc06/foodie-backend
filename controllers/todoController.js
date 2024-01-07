@@ -48,6 +48,7 @@ export const updateTodo = async (req, res) => {
 
 export const deleteTodo = async (req, res) => {
   const { id } = req.params;
+  console.log("delete todo");
   const { error } = await supabase.from("todos").delete().eq("id", id);
-  return { error };
+  res.json({ error });
 };

@@ -63,21 +63,22 @@ export const signInWithToken = async (req, res) => {
 
 export const updateAccount = async (req, res) => {
   const { id } = req.params;
-  const { name, username, avatar_url } = req.body;
-  const { data: existedAccount } = await supabase
-    .from("accounts")
-    .select("*")
-    .eq("username", username)
-    .single();
-  if (existedAccount) {
-    return res.json({ error: "Username already taken" });
-  }
+  const { name, username, avatar_url, push_token } = req.body;
+  // const { data: existedAccount } = await supabase
+  //   .from("accounts")
+  //   .select("*")
+  //   .eq("username", username)
+  //   .single();
+  // if (existedAccount) {
+  //   return res.json({ error: "Username already taken" });
+  // }
   const { data: updatedAccount, error } = await supabase
     .from("accounts")
     .update({
       name,
       username,
       avatar_url,
+      push_token,
     })
     .eq("id", id)
     .select()
