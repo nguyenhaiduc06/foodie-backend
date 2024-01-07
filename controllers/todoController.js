@@ -25,7 +25,8 @@ export const getTodos = async (req, res) => {
     .select("*")
     .lte("date", endOfDate)
     .gte("date", startOfDate)
-    .eq("group_id", group_id);
+    .eq("group_id", group_id)
+    .order("created_at", { ascending: false });
   res.json({ data, error });
 };
 
